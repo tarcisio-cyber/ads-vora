@@ -31,7 +31,7 @@ pool.on('error', (err) => {
 
 app.use(cors({ origin: process.env.ALLOWED_ORIGINS?.split(',') || '*' }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public', { extensions: ['html'] }));
 
 const auth = (req, res, next) => {
   const provided = Buffer.from(req.get('x-api-key') || '', 'utf8');
@@ -128,7 +128,7 @@ app.post('/api/accounts', auth, async (req, res) => {
 });
 
 app.put('/api/accounts/:id', auth, async (req, res) => {
-  const fields = ['client_name','client_segment','client_color','monthly_budget_target','cpl_benchmark','notes','bac_ressonancia','bac_fluxo','bac_homeostase'];
+  const fields = ['client_name','client_segment','client_color','monthly_budget_target','cpl_benchmark','notes'];
   const updates = []; const values = [];
   for (const f of fields) { if (req.body[f]!==undefined) { updates.push(`${f}=$${updates.length+1}`); values.push(req.body[f]); } }
   if (!updates.length) return res.status(400).json({ error: 'Nenhum campo para atualizar' });
@@ -339,15 +339,15 @@ ${accountContext}`;
 });
 
 app.post('/api/ai/generate-copy', auth, async (req, res) => {
-  const { account_id, objective, platform, audience_notes, bac_pillar } = req.body;
+  const { account_id, objective, platform, audience_notes, copy_focus } = req.body;
   try {
     const { rows:[account] } = await pool.query('SELECT * FROM ads_accounts WHERE id=$1', [account_id]);
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'x-api-key':process.env.ANTHROPIC_API_KEY, 'anthropic-version':'2023-06-01' },
       body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000,
-        system:'VORA Traffic. Gere copies de anuncios aplicando Metodo BAC. Tom clinico. Responda SOMENTE em JSON valido.',
-        messages:[{ role:'user', content:`Gere copy para: Cliente:${account?.client_name} Segmento:${account?.client_segment} Plataforma:${platform} Objetivo:${objective} Pilar BAC:${bac_pillar||'Ressonancia'} Publico:${audience_notes||'Decisores C-Level B2B'}\nRetorne JSON: {"headline_1":"","headline_2":"","headline_3":"","primary_text":"","cta":"","bac_rationale":""}` }]
+        system:'VORA Traffic. Gere copies de anuncios com base em analise de metricas e boas praticas de performance. Tom clinico. Responda SOMENTE em JSON valido.',
+        messages:[{ role:'user', content:`Gere copy para: Cliente:${account?.client_name} Segmento:${account?.client_segment} Plataforma:${platform} Objetivo:${objective} Foco da copy:${copy_focus||'Conversao'} Publico:${audience_notes||'Decisores C-Level B2B'}\nRetorne JSON: {"headline_1":"","headline_2":"","headline_3":"","primary_text":"","cta":"","rationale":""}` }]
       })
     });
     const data = await resp.json();
