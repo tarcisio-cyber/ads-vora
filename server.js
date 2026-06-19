@@ -369,9 +369,23 @@ cron.schedule('0 0,6,12,18 * * *', async () => {
   } catch (e) { console.error('[Cron] Erro:', e.message); }
 });
 
-pool.connect()
-  .then(() => {
-    console.log('[Vohaus Ads] DB conectado');
-    app.listen(PORT, () => console.log(`[Vohaus Ads] Rodando na porta ${PORT}`));
-  })
-  .catch(e => { console.error('[Vohaus Ads] DB falhou:', e.message); process.exit(1); });
+async function startServer() {
+  const maxRetries = 10;
+  const retryDelayMs = 3000;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Vohaus Ads] Conectando ao DB (tentativa ${attempt}/${maxRetries})...`);
+      const client = await pool.connect();
+      client.release();
+      console.log('[Vohaus Ads] DB conectado');
+      app.listen(PORT, () => console.log(`[Vohaus Ads] Rodando na porta ${PORT}`));
+      return;
+    } catch (e) {
+      console.error(`[Vohaus Ads] DB falhou (tentativa ${attempt}/${maxRetries}):`, e.message);
+      if (attempt < maxRetries) await new Promise(r => setTimeout(r, retryDelayMs));
+    }
+  }
+  console.error(`[Vohaus Ads] DB inacessivel apos ${maxRetries} tentativas. Encerrando.`);
+  process.exit(1);
+}
+startServer();
