@@ -274,18 +274,18 @@ body.light{--bg:#F4F5F7;--bg2:#FFFFFF;--bg3:#FFFFFF;--bg4:#F0F1F4;--bg5:#E4E6EC;
 
 <div class="view" id="view-ai" style="flex-direction:column;height:calc(100vh - 56px - 48px)">
   <div class="page-header" style="flex-shrink:0">
-    <div><h1 class="page-title">VORA AI — Traffic</h1><div class="page-sub">Analise inteligente com Metodo BAC</div></div>
+    <div><h1 class="page-title">VORA AI — Traffic</h1><div class="page-sub">Analise inteligente de trafego pago</div></div>
     <button class="btn btn-ghost btn-sm" onclick="clearAiChat()">⊗ Limpar</button>
   </div>
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;flex-shrink:0">
     <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Qual campanha tem o pior CPL hoje?')">Pior CPL</button>
-    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Analise a Ressonancia dos criativos ativos')">Analisar Ressonancia</button>
-    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Gere um copy para campanha de lead B2B saude com tom BAC')">Gerar Copy</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Analise a saturacao e frequencia dos criativos ativos')">Saturacao</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Gere um copy para campanha de lead B2B saude')">Gerar Copy</button>
     <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Quais campanhas devo pausar para proteger o budget?')">Otimizar Budget</button>
   </div>
   <div class="card ai-panel" style="flex:1;min-height:0;padding:0">
     <div class="ai-messages" id="ai-messages">
-      <div class="ai-msg"><div class="ai-avatar vora">V</div><div class="ai-bubble"><strong style="font-size:12px;color:var(--orange)">VORA Traffic</strong><br>Sistema inicializado. Conecte suas contas Meta e Google em <strong>Contas & API</strong> para ativar a analise em tempo real do portfolio.<br><br>Posso ajudar com estrategia, copies BAC e diagnostico de campanhas.</div></div>
+      <div class="ai-msg"><div class="ai-avatar vora">V</div><div class="ai-bubble"><strong style="font-size:12px;color:var(--orange)">VORA Traffic</strong><br>Sistema inicializado. Conecte suas contas Meta e Google em <strong>Contas & API</strong> para ativar a analise em tempo real do portfolio.<br><br>Posso ajudar com estrategia, copies e diagnostico de campanhas.</div></div>
     </div>
     <div class="ai-input-row">
       <input class="ai-input" id="ai-input" placeholder="Pergunte sobre campanhas, performance, copies..." onkeydown="if(event.key==='Enter')sendAiMsg()">
@@ -328,7 +328,7 @@ body.light{--bg:#F4F5F7;--bg2:#FFFFFF;--bg3:#FFFFFF;--bg4:#F0F1F4;--bg5:#E4E6EC;
 <div class="view" id="view-creatives">
   <div class="page-header">
     <div><h1 class="page-title">Criativos</h1><div class="page-sub">Biblioteca de assets e copies</div></div>
-    <button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Gere um copy de anuncio Meta Ads para B2B saude com tom BAC clinico');navigate('ai')">✦ Gerar com IA</button>
+    <button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Gere um copy de anuncio Meta Ads para B2B saude com tom clinico');navigate('ai')">✦ Gerar com IA</button>
   </div>
   <div class="card" style="text-align:center;padding:48px">
     <div style="font-size:32px;margin-bottom:12px">⬕</div>
@@ -338,12 +338,12 @@ body.light{--bg:#F4F5F7;--bg2:#FFFFFF;--bg3:#FFFFFF;--bg4:#F0F1F4;--bg5:#E4E6EC;
 </div>
 
 <div class="view" id="view-reports">
-  <div class="page-header"><div><h1 class="page-title">Relatorios</h1></div><button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Crie um relatorio de performance do portfolio com diagnostico BAC');navigate('ai')">✦ Gerar com IA</button></div>
+  <div class="page-header"><div><h1 class="page-title">Relatorios</h1></div><button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Crie um relatorio de performance do portfolio com diagnostico de metricas');navigate('ai')">✦ Gerar com IA</button></div>
   <div class="grid-2">
     <div class="card"><div class="card-header"><span class="card-title">Configurar Relatorio</span></div>
       <div class="form-group"><label class="form-label">Cliente</label><select class="form-input form-select" id="report-client"><option>Todos</option></select></div>
       <div class="form-group"><label class="form-label">Periodo</label><select class="form-input form-select"><option>Ultimos 30 dias</option><option>Ultimos 7 dias</option><option>Este mes</option></select></div>
-      <button class="btn btn-primary" style="width:100%" onclick="sendAiPrompt('Crie relatorio de performance com diagnostico BAC');navigate('ai')">✦ Gerar com VORA AI</button>
+      <button class="btn btn-primary" style="width:100%" onclick="sendAiPrompt('Crie relatorio de performance com diagnostico de metricas');navigate('ai')">✦ Gerar com VORA AI</button>
     </div>
     <div class="card"><div class="card-header"><span class="card-title">Ultimos Relatorios</span></div><div style="color:var(--text3);font-size:12px;padding:16px 0;text-align:center">Nenhum relatorio gerado ainda</div></div>
   </div>
@@ -443,10 +443,11 @@ body.light{--bg:#F4F5F7;--bg2:#FFFFFF;--bg3:#FFFFFF;--bg4:#F0F1F4;--bg5:#E4E6EC;
 
 <script>
 const API = '';
+ const API_SECRET = '__API_SECRET__';
 let aiHistory = [];
 
 async function api(method, url, body=null) {
-  const opts = { method, headers: { 'Content-Type':'application/json', 'x-session-token':'dev-token' } };
+  const opts = { method, headers: { 'Content-Type':'application/json', 'x-api-key': API_SECRET } };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(API + url, opts);
   const data = await r.json();
