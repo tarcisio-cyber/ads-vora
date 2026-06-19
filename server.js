@@ -1,9 +1,16 @@
 require('dotenv').config();
+
+if (!process.env.API_SECRET) {
+  console.error('[Vohaus Ads] API_SECRET não definida. Defina a variável de ambiente API_SECRET antes de iniciar (proteção de API). Encerrando.');
+  process.exit(1);
+}
+
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const cron = require('node-cron');
 const fetch = require('node-fetch');
+const crypto = require('crypto');
 const oauth = require('./services/oauth');
 const metaSvc = require('./services/meta');
 const googleSvc = require('./services/google');
@@ -26,7 +33,13 @@ app.use(cors({ origin: process.env.ALLOWED_ORIGINS?.split(',') || '*' }));
 app.use(express.json());
 app.use(express.static('public'));
 
-const auth = async (req, res, next) => {
+const auth = (req, res, next) => {
+  const provided = Buffer.from(req.get('x-api-key') || '', 'utf8');
+  const expected = Buffer.from(process.env.API_SECRET, 'utf8');
+  // timingSafeEqual exige buffers do mesmo tamanho; tamanhos diferentes => não autorizado
+  if (provided.length !== expected.length || !crypto.timingSafeEqual(provided, expected)) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
   req.userId = 'dev';
   return next();
 };
