@@ -307,12 +307,12 @@ REGRAS CRITICAS:
 - NUNCA invente dados, metricas ou status de campanhas
 - NUNCA escreva codigo Python ou pseudocodigo
 - Se nao tiver dados de uma conta, diga claramente: "Nao ha dados sincronizados para esta conta. Use o botao Sync na tela de Clientes."
-- Aplique o Metodo BAC apenas quando tiver dados reais para analisar
+- Analise como um gestor de trafego senior, com base em metricas objetivas
 
-METODO BAC:
-- Ressonancia: o criativo conecta com o decisor?
-- Fluxo: o funil tem gargalos pos-clique?
-- Homeostase: o CPL esta protegendo a margem?
+CRITERIOS DE ANALISE:
+- CPL: esta dentro da meta? Subiu vs periodo anterior?
+- Frequencia: acima de 4 indica saturacao, recomende renovar criativo
+- CTR baixo sugere criativo fraco. Gasto vs budget saudavel? ROAS quando houver. Priorize impacto financeiro.
 
 Tom: clinico, direto. Conclusoes antes de explicacoes. Sem entusiasmo.
 
@@ -327,7 +327,7 @@ ${accountContext}`;
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'x-api-key':process.env.ANTHROPIC_API_KEY, 'anthropic-version':'2023-06-01' },
       body: JSON.stringify({
-          model:'claude-sonnet-4-20250514',
+          model:'claude-sonnet-4-6',
           max_tokens:1500,
           system:systemPrompt,
           messages
@@ -345,7 +345,7 @@ app.post('/api/ai/generate-copy', auth, async (req, res) => {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'x-api-key':process.env.ANTHROPIC_API_KEY, 'anthropic-version':'2023-06-01' },
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000,
+      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000,
         system:'VORA Traffic. Gere copies de anuncios aplicando Metodo BAC. Tom clinico. Responda SOMENTE em JSON valido.',
         messages:[{ role:'user', content:`Gere copy para: Cliente:${account?.client_name} Segmento:${account?.client_segment} Plataforma:${platform} Objetivo:${objective} Pilar BAC:${bac_pillar||'Ressonancia'} Publico:${audience_notes||'Decisores C-Level B2B'}\nRetorne JSON: {"headline_1":"","headline_2":"","headline_3":"","primary_text":"","cta":"","bac_rationale":""}` }]
       })
