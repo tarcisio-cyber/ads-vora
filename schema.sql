@@ -118,3 +118,20 @@ CREATE TABLE IF NOT EXISTS ads_ai_sessions (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+-- View de KPIs por conta (agregação mensal)
+CREATE OR REPLACE VIEW public.ads_account_kpis AS
+ SELECT a.id AS account_id, a.client_name, a.client_segment,
+    ( SELECT count(*) FROM ads_campaigns c WHERE c.account_id = a.id AND c.status::text = 'ACTIVE'::text) AS active_campaigns,
+    COALESCE(sum(m.spend), 0::numeric) AS month_spend,
+    COALESCE(sum(m.leads), 0::bigint) AS month_leads,
+    COALESCE(sum(m.impressions), 0::numeric) AS month_impressions,
+    COALESCE(sum(m.clicks), 0::bigint) AS month_clicks,
+    CASE WHEN sum(m.leads) > 0 THEN sum(m.spend) / sum(m.leads)::numeric ELSE NULL::numeric END AS month_cpl,
+    CASE WHEN sum(m.clicks) > 0 THEN sum(m.clicks)::numeric / NULLIF(sum(m.impressions), 0::numeric) ELSE NULL::numeric END AS avg_ctr,
+    a.monthly_budget_target,
+    CASE WHEN a.monthly_budget_target > 0::numeric THEN COALESCE(sum(m.spend), 0::numeric) / a.monthly_budget_target * 100::numeric ELSE NULL::numeric END AS budget_pct_used
+   FROM ads_accounts a
+     LEFT JOIN ads_metrics m ON m.account_id = a.id AND m.date >= date_trunc('month'::text, CURRENT_DATE::timestamp with time zone)
+  WHERE a.status::text = 'active'::text
+  GROUP BY a.id, a.client_name, a.client_segment, a.monthly_budget_target;
