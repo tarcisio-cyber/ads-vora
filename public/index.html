@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vohaus Ads Hub · ads.vohaus.com.br</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0C12;--bg2:#0F1117;--bg3:#141720;--bg4:#1A1D2A;--bg5:#1F2333;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#E8E9F0;--text2:#8B8FA8;--text3:#555870;--orange:#FF3D00;--orange2:rgba(255,61,0,0.15);--orange3:rgba(255,61,0,0.08);--meta:#1877F2;--meta2:rgba(24,119,242,0.15);--google:#EA4335;--google2:rgba(234,67,53,0.15);--green:#00C896;--green2:rgba(0,200,150,0.12);--yellow:#F5C842;--yellow2:rgba(245,200,66,0.12);--red:#FF4560;--red2:rgba(255,69,96,0.12);--radius:8px;--radius2:12px;--radius3:16px;--font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;overflow:hidden;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:56px 1fr;height:100vh}
+.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 0;overflow-y:auto}
+.main{overflow-y:auto;padding:24px}
+.logo-mark{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-badge{width:28px;height:28px;background:var(--orange);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:var(--text)}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:-2px}
+.topbar-sep{width:1px;height:24px;background:var(--border2);margin:0 4px}
+.client-selector{display:flex;align-items:center;gap:8px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;cursor:pointer;transition:border-color .2s}
+.client-selector:hover{border-color:var(--border2)}
+.client-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite}
+.client-name{font-size:13px;font-weight:500}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius);background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s}
+.icon-btn:hover{background:var(--bg4);border-color:var(--border2);color:var(--text)}
+.alert-badge{position:relative}
+.alert-badge::after{content:'3';position:absolute;top:-4px;right:-4px;background:var(--orange);color:#fff;font-size:9px;font-weight:700;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sync-btn{display:flex;align-items:center;gap:6px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:var(--font)}
+.sync-btn:hover{border-color:var(--border2);color:var(--text)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--orange),#ff6b35);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--border2)}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:12px 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text2);font-size:13px;font-weight:400;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--bg4);color:var(--text)}
+.nav-item.active{background:var(--orange3);color:var(--orange);border-left:2px solid var(--orange);padding-left:8px}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.nav-badge{margin-left:auto;background:var(--red2);color:var(--red);font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.nav-badge.green{background:var(--green2);color:var(--green)}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.plat{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 7px;border-radius:4px}
+.plat.meta{background:var(--meta2);color:var(--meta)}
+.plat.google{background:var(--google2);color:var(--google)}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:20px}
+.card-sm{padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(--border2)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,var(--orange))}
+.kpi-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.kpi-up{color:var(--green);font-weight:500}
+.kpi-down{color:var(--red);font-weight:500}
+.status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px}
+.status-dot{width:5px;height:5px;border-radius:50%}
+.status.active{background:var(--green2);color:var(--green)}
+.status.active .status-dot{background:var(--green);animation:pulse-dot 2s ease-in-out infinite}
+.status.paused{background:var(--yellow2);color:var(--yellow)}
+.status.paused .status-dot{background:var(--yellow)}
+.status.ended{background:rgba(255,255,255,0.05);color:var(--text3)}
+.status.ended .status-dot{background:var(--text3)}
+.status.review{background:var(--meta2);color:var(--meta)}
+.status.review .status-dot{background:var(--meta)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.td-num{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.td-name{font-weight:500;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toggle{position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--bg5);border:1px solid var(--border2);border-radius:20px;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;height:14px;width:14px;left:2px;bottom:2px;background:var(--text3);border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider{background:var(--green);border-color:var(--green)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px);background:#fff}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font);border:none}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{background:#e03500}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg4);color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.alert-strip{background:var(--red2);border:1px solid rgba(255,69,96,.2);border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.alert-strip.warning{background:var(--yellow2);border-color:rgba(245,200,66,.2)}
+.alert-text{font-size:12px;color:var(--text)}
+.alert-dismiss{margin-left:auto;color:var(--text3);cursor:pointer;font-size:16px;line-height:1}
+.alert-dismiss:hover{color:var(--text)}
+.ai-panel{display:flex;flex-direction:column;height:100%}
+.ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-msg{display:flex;gap:10px;align-items:flex-start}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-bubble{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius2);padding:10px 14px;font-size:13px;line-height:1.6;max-width:85%}
+.ai-msg.user .ai-bubble{background:var(--orange3);border-color:rgba(255,61,0,.2)}
+.ai-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid var(--border2)}
+.ai-avatar.vora{background:linear-gradient(135deg,var(--orange),#ff6b35);color:#fff}
+.ai-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-input{flex:1;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-size:13px;color:var(--text);font-family:var(--font)}
+.ai-input:focus{outline:none;border-color:var(--orange)}
+.ai-input::placeholder{color:var(--text3)}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:18px;font-weight:700}
+.page-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.gap-12{display:flex;flex-direction:column;gap:12px}
+.tabs{display:flex;gap:0;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:3px;width:fit-content}
+.tab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.campaign-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin-bottom:8px;transition:border-color .2s}
+.campaign-row:hover{border-color:var(--border2)}
+.campaign-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
+.campaign-expand{color:var(--text3);font-size:10px;transition:transform .2s}
+.campaign-expand.open{transform:rotate(90deg)}
+.campaign-name{font-size:13px;font-weight:600;flex:1}
+.campaign-meta{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.campaign-body{display:none;border-top:1px solid var(--border)}
+.campaign-body.open{display:block}
+.adset-row{display:flex;align-items:center;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border);font-size:12px}
+.adset-row:last-child{border-bottom:none}
+.perf-bar{height:4px;background:var(--bg5);border-radius:2px;overflow:hidden}
+.perf-fill{height:100%;border-radius:2px;background:var(--green)}
+.perf-fill.yellow{background:var(--yellow)}
+.perf-fill.red{background:var(--red)}
+.budget-input{width:70px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:4px 8px;font-size:12px;color:var(--text);font-family:var(--mono);text-align:right}
+.budget-input:focus{outline:none;border-color:var(--orange)}
+.mini-bars{display:flex;align-items:flex-end;gap:2px;height:32px}
+.mini-bar{border-radius:2px 2px 0 0;flex:1;background:var(--orange);opacity:.5}
+.mini-bar:hover{opacity:1}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;background:var(--bg5);color:var(--text3);border:1px solid var(--border)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius3);width:100%;max-width:520px;max-height:80vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:15px;font-weight:700}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.form-group{margin-bottom:16px}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:13px;color:var(--text);font-family:var(--font);transition:border-color .2s}
+.form-input:focus{outline:none;border-color:var(--orange)}
+.form-input::placeholder{color:var(--text3)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555870'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dropdown{position:relative}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:6px;min-width:160px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.dropdown-item{padding:7px 12px;border-radius:6px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .1s;display:flex;align-items:center;gap:8px}
+.dropdown-item:hover{background:var(--bg4);color:var(--text)}
+.dropdown-item.danger{color:var(--red)}
+.dropdown-item.danger:hover{background:var(--red2)}
+.toast-area{position:fixed;bottom:20px;right:20px;z-index:600;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px;min-width:240px;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:slide-in .2s ease}
+@keyframes slide-in{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.view{display:none}
+.view.active{display:block}
+#view-ai.active{display:flex}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+[data-tip]{position:relative;cursor:help}
+[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg5);color:var(--text);font-size:11px;white-space:nowrap;padding:4px 8px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1000;border:1px solid var(--border2)}
+[data-tip]:hover::after{opacity:1}
+body.light{--bg:#F4F5F7;--bg2:#FFFFFF;--bg3:#FFFFFF;--bg4:#F0F1F4;--bg5:#E4E6EC;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#1A1D2A;--text2:#4A4E6A;--text3:#8B8FA8;--orange:#FF3D00;--orange2:rgba(255,61,0,0.10);--orange3:rgba(255,61,0,0.06);--meta:#1877F2;--meta2:rgba(24,119,242,0.10);--google:#EA4335;--google2:rgba(234,67,53,0.10);--green:#00A878;--green2:rgba(0,168,120,0.10);--yellow:#D4A017;--yellow2:rgba(212,160,23,0.10);--red:#E03050;--red2:rgba(224,48,80,0.10)}body.light .topbar,body.light .sidebar,body.light .card,body.light .kpi{box-shadow:0 1px 4px rgba(0,0,0,0.08)}body.light table th{background:var(--bg4)}</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <a class="logo-mark" href="#" onclick="navigate('dashboard');return false">
+    <div class="logo-badge">VA</div>
+    <div><div class="logo-text">Vohaus Ads</div><div class="logo-sub">ads.vohaus.com.br · tarcisioraduntz@gmail.com</div></div>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="client-selector" onclick="showToast('Selecione uma conta na view Clientes','info')">
+    <div class="client-dot"></div>
+    <span class="client-name" id="active-client-name">Todos os clientes</span>
+    <span style="color:var(--text3);font-size:10px;margin-left:4px">▼</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <div class="tabs" style="margin-bottom:0">
+    <div class="tab active" onclick="setPlat('all',this)">Todos</div>
+    <div class="tab" onclick="setPlat('meta',this)"><span style="color:var(--meta)">◉</span> Meta</div>
+    <div class="tab" onclick="setPlat('google',this)"><span style="color:var(--google)">◉</span> Google</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="sync-btn" onclick="syncAll()"><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Sincronizar</span></button>
+    <button class="icon-btn alert-badge" onclick="navigate('alerts')" data-tip="3 alertas">⚑</button>
+    <button class="icon-btn" onclick="navigate('ai')" data-tip="VORA AI">✦</button>
+    <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" data-tip="Alternar tema">☀</button><div class="avatar">T</div>
+  </div>
+</header>
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Principal</div>
+    <button class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')"><span class="nav-icon">⬡</span> Dashboard</button>
+    <button class="nav-item" id="nav-campaigns" onclick="navigate('campaigns')"><span class="nav-icon">◈</span> Campanhas<span class="nav-badge green">0</span></button>
+    <button class="nav-item" id="nav-analytics" onclick="navigate('analytics')"><span class="nav-icon">◎</span> Analytics</button>
+    <button class="nav-item" id="nav-creatives" onclick="navigate('creatives')"><span class="nav-icon">⬕</span> Criativos</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">IA</div>
+    <button class="nav-item" id="nav-ai" onclick="navigate('ai')"><span class="nav-icon">✦</span> VORA AI</button>
+    <button class="nav-item" id="nav-reports" onclick="navigate('reports')"><span class="nav-icon">⊞</span> Relatorios</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Gestao</div>
+    <button class="nav-item" id="nav-clients" onclick="navigate('clients')"><span class="nav-icon">◻</span> Clientes</button>
+    <button class="nav-item" id="nav-alerts" onclick="navigate('alerts')"><span class="nav-icon">◇</span> Alertas<span class="nav-badge" id="alerts-badge">0</span></button>
+    <button class="nav-item" id="nav-setup" onclick="navigate('setup')"><span class="nav-icon">⬡</span> Contas & API</button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="nav-item" id="nav-settings" onclick="navigate('settings')"><span class="nav-icon">⚙</span> Configuracoes</button>
+    <button class="nav-item" onclick="window.open('https://vora.vohaus.com.br','_blank')"><span class="nav-icon">↗</span> VORA Chat</button>
+  </div>
+</nav>
+<main class="main" id="main-content">
+
+<div class="view active" id="view-dashboard">
+  <div class="page-header">
+    <div><h1 class="page-title">Dashboard</h1><div class="page-sub" id="dash-sub">Carregando...</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="showToast('Exportando...','info')">⬇ Exportar</button>
+      <button class="btn btn-primary btn-sm" onclick="navigate('setup')">+ Conectar conta</button>
+    </div>
+  </div>
+  <div id="dash-alerts"></div>
+  <div class="kpi-grid" id="dash-kpis">
+    <div class="kpi" style="--accent:var(--orange)"><div class="kpi-label">Gasto Total (Mes)</div><div class="kpi-value" id="kpi-spend">R$ --</div><div class="kpi-sub">mês corrente</div></div>
+    <div class="kpi" style="--accent:var(--green)"><div class="kpi-label">Leads Gerados</div><div class="kpi-value" id="kpi-leads">--</div><div class="kpi-sub">mês corrente</div></div>
+    <div class="kpi" style="--accent:var(--meta)"><div class="kpi-label">CPL Medio</div><div class="kpi-value" id="kpi-cpl">R$ --</div><div class="kpi-sub">custo por lead</div></div>
+    <div class="kpi" style="--accent:var(--yellow)"><div class="kpi-label">Campanhas Ativas</div><div class="kpi-value" id="kpi-campaigns">--</div><div class="kpi-sub">em execucao</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header"><span class="card-title">Contas de Clientes</span><button class="btn btn-ghost btn-sm" onclick="navigate('clients')">Ver todas</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Plataformas</th><th>Campanhas</th><th>Gasto Mes</th><th>CPL</th><th>Budget</th><th>Status</th><th></th></tr></thead><tbody id="dash-accounts">
+        <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">Carregando dados... configure as contas em <strong style="color:var(--orange)">Contas & API</strong></td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Distribuicao de Canais</span></div>
+      <div id="channel-split" style="text-align:center;color:var(--text3);padding:20px">Aguardando dados de campanhas</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Alertas Recentes</span><button class="btn btn-ghost btn-sm" onclick="navigate('alerts')">Ver todos</button></div>
+      <div id="recent-alerts" class="gap-12"><div style="color:var(--text3);font-size:12px">Nenhum alerta ativo</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-campaigns">
+  <div class="page-header">
+    <div><h1 class="page-title">Campanhas</h1><div class="page-sub" id="camp-sub">Sincronize uma conta para ver campanhas</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm">⬇ Exportar</button>
+      <button class="btn btn-primary btn-sm" onclick="navigate('setup')">+ Conectar conta</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+    <div class="tabs" style="margin-bottom:0">
+      <div class="tab active" onclick="filterCamps('all',this)">Todas</div>
+      <div class="tab" onclick="filterCamps('ACTIVE',this)">Ativas</div>
+      <div class="tab" onclick="filterCamps('PAUSED',this)">Pausadas</div>
+    </div>
+  </div>
+  <div id="campaigns-list"><div style="text-align:center;padding:40px;color:var(--text3)">Nenhuma campanha sincronizada. Va em <strong style="color:var(--orange)">Contas & API</strong> para conectar Meta e Google.</div></div>
+</div>
+
+<div class="view" id="view-ai" style="flex-direction:column;height:calc(100vh - 56px - 48px)">
+  <div class="page-header" style="flex-shrink:0">
+    <div><h1 class="page-title">VORA AI — Traffic</h1><div class="page-sub">Analise inteligente com Metodo BAC</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="clearAiChat()">⊗ Limpar</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;flex-shrink:0">
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Qual campanha tem o pior CPL hoje?')">Pior CPL</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Analise a Ressonancia dos criativos ativos')">Analisar Ressonancia</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Gere um copy para campanha de lead B2B saude com tom BAC')">Gerar Copy</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendAiPrompt('Quais campanhas devo pausar para proteger o budget?')">Otimizar Budget</button>
+  </div>
+  <div class="card ai-panel" style="flex:1;min-height:0;padding:0">
+    <div class="ai-messages" id="ai-messages">
+      <div class="ai-msg"><div class="ai-avatar vora">V</div><div class="ai-bubble"><strong style="font-size:12px;color:var(--orange)">VORA Traffic</strong><br>Sistema inicializado. Conecte suas contas Meta e Google em <strong>Contas & API</strong> para ativar a analise em tempo real do portfolio.<br><br>Posso ajudar com estrategia, copies BAC e diagnostico de campanhas.</div></div>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="ai-input" placeholder="Pergunte sobre campanhas, performance, copies..." onkeydown="if(event.key==='Enter')sendAiMsg()">
+      <button class="btn btn-primary" onclick="sendAiMsg()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-clients">
+  <div class="page-header">
+    <div><h1 class="page-title">Clientes</h1><div class="page-sub" id="clients-sub">Contas de anuncios gerenciadas</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-client')">+ Nova conta</button>
+  </div>
+  <div class="grid-2" id="clients-grid">
+    <div class="card" style="border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:200px;cursor:pointer;color:var(--text3)" onclick="navigate('setup')">
+      <span style="font-size:24px">+</span><span style="font-size:13px;font-weight:500">Adicionar conta de cliente</span>
+      <span style="font-size:11px;text-align:center">Configure em Contas & API</span>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-alerts">
+  <div class="page-header">
+    <div><h1 class="page-title">Alertas</h1><div class="page-sub" id="alerts-sub">Monitoramento automatico do portfolio</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="resolveAllAlerts()">✓ Resolver todos</button>
+  </div>
+  <div class="gap-12" id="alerts-list"><div style="color:var(--text3);font-size:12px;padding:20px;text-align:center">Nenhum alerta ativo</div></div>
+</div>
+
+<div class="view" id="view-analytics">
+  <div class="page-header"><div><h1 class="page-title">Analytics</h1><div class="page-sub">Performance consolidada</div></div></div>
+  <div class="card" style="text-align:center;padding:48px">
+    <div style="font-size:32px;margin-bottom:12px">◎</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px">Graficos de performance</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:16px">Disponiveis apos conectar contas e sincronizar dados</div>
+    <button class="btn btn-primary" onclick="navigate('setup')">Conectar contas</button>
+  </div>
+</div>
+
+<div class="view" id="view-creatives">
+  <div class="page-header">
+    <div><h1 class="page-title">Criativos</h1><div class="page-sub">Biblioteca de assets e copies</div></div>
+    <button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Gere um copy de anuncio Meta Ads para B2B saude com tom BAC clinico');navigate('ai')">✦ Gerar com IA</button>
+  </div>
+  <div class="card" style="text-align:center;padding:48px">
+    <div style="font-size:32px;margin-bottom:12px">⬕</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px">Biblioteca de criativos</div>
+    <div style="font-size:12px;color:var(--text3)">Sincronize campanhas para ver criativos ativos</div>
+  </div>
+</div>
+
+<div class="view" id="view-reports">
+  <div class="page-header"><div><h1 class="page-title">Relatorios</h1></div><button class="btn btn-primary btn-sm" onclick="sendAiPrompt('Crie um relatorio de performance do portfolio com diagnostico BAC');navigate('ai')">✦ Gerar com IA</button></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-header"><span class="card-title">Configurar Relatorio</span></div>
+      <div class="form-group"><label class="form-label">Cliente</label><select class="form-input form-select" id="report-client"><option>Todos</option></select></div>
+      <div class="form-group"><label class="form-label">Periodo</label><select class="form-input form-select"><option>Ultimos 30 dias</option><option>Ultimos 7 dias</option><option>Este mes</option></select></div>
+      <button class="btn btn-primary" style="width:100%" onclick="sendAiPrompt('Crie relatorio de performance com diagnostico BAC');navigate('ai')">✦ Gerar com VORA AI</button>
+    </div>
+    <div class="card"><div class="card-header"><span class="card-title">Ultimos Relatorios</span></div><div style="color:var(--text3);font-size:12px;padding:16px 0;text-align:center">Nenhum relatorio gerado ainda</div></div>
+  </div>
+</div>
+
+<div class="view" id="view-setup">
+  <div class="page-header"><div><h1 class="page-title">Contas & Integracoes</h1><div class="page-sub">Conta centralizadora: tarcisioraduntz@gmail.com</div></div></div>
+  <div class="card card-sm" style="border-left:3px solid var(--orange);margin-bottom:20px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Autenticacao centralizada</div>
+    <div style="font-size:12px;color:var(--text3)"><strong style="color:var(--text2)">Meta:</strong> Um System User Token do Business Manager acessa todas as contas de clientes vinculadas. &nbsp;<strong style="color:var(--text2)">Google:</strong> OAuth da conta tarcisioraduntz@gmail.com acessa todas as contas via MCC ou acesso individual.</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="display:flex;align-items:center;gap:8px"><span style="color:var(--meta)">◉</span> Meta Business</span><span class="status review" id="meta-conn-status"><span class="status-dot"></span>Nao conectado</span></div>
+      <div class="form-group"><label class="form-label">System User Token</label><input class="form-input" id="meta-token-input" type="password" placeholder="EAAxxxxxxxx..." style="font-family:var(--mono);font-size:11px"><div style="font-size:11px;color:var(--text3);margin-top:4px">business.facebook.com → Configuracoes do Negocio → Usuarios do Sistema → Gerar Token<br>Permissoes necessarias: <code style="background:var(--bg4);padding:1px 4px;border-radius:3px">ads_management</code> <code style="background:var(--bg4);padding:1px 4px;border-radius:3px">ads_read</code></div></div>
+      <div class="form-group"><label class="form-label">Business Manager ID</label><input class="form-input" id="meta-bm-input" placeholder="ex: 1234567890" style="font-family:var(--mono)"><div style="font-size:11px;color:var(--text3);margin-top:4px">business.facebook.com → Configuracoes → Informacoes da empresa → ID</div></div>
+      <button class="btn btn-primary" style="width:100%" onclick="connectMeta()">Conectar Meta</button>
+      <div id="meta-accounts-found" style="display:none;margin-top:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Contas encontradas</div>
+        <div id="meta-accounts-items" class="gap-12"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="display:flex;align-items:center;gap:8px"><span style="color:var(--google)">◉</span> Google Ads</span><span class="status review" id="google-conn-status"><span class="status-dot"></span>Nao conectado</span></div>
+      <div style="background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;text-align:center">
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px">OAuth 2.0 — tarcisioraduntz@gmail.com</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Clique para autenticar. Voce sera redirecionado e voltara automaticamente.</div>
+        <button class="btn btn-primary" onclick="connectGoogle()" style="width:100%">Autenticar com Google</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.8"><strong style="color:var(--text2)">Pre-requisitos:</strong><br>1. Developer Token em ads.google.com/aw/apicenter<br>2. Projeto OAuth em console.cloud.google.com<br>3. Google Ads API ativada<br>4. Preencher GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env</div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header"><span class="card-title">Contas de Clientes Cadastradas</span><button class="btn btn-primary btn-sm" onclick="openModal('modal-new-client')">+ Adicionar</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Segmento</th><th>Meta Ad Account ID</th><th>Google Customer ID</th><th>Budget Mensal</th><th>Status</th><th></th></tr></thead><tbody id="setup-accounts-table"><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px">Nenhuma conta cadastrada. Clique em + Adicionar para comecar.</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-settings">
+  <div class="page-header"><h1 class="page-title">Configuracoes</h1></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Status das Integracoes</span></div>
+      <div class="gap-12">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg4);border-radius:var(--radius);border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--meta);font-size:18px">◉</span><div><div style="font-size:13px;font-weight:500">Meta Marketing API</div><div style="font-size:11px;color:var(--text3)">System User Token</div></div></div>
+          <span class="status review" id="settings-meta-status"><span class="status-dot"></span>Verificando...</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg4);border-radius:var(--radius);border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--google);font-size:18px">◉</span><div><div style="font-size:13px;font-weight:500">Google Ads API</div><div style="font-size:11px;color:var(--text3)">OAuth 2.0</div></div></div>
+          <span class="status review" id="settings-google-status"><span class="status-dot"></span>Verificando...</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg4);border-radius:var(--radius);border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--orange);font-size:18px">✦</span><div><div style="font-size:13px;font-weight:500">Claude API</div><div style="font-size:11px;color:var(--text3)">claude-sonnet-4-20250514</div></div></div>
+          <span class="status active"><span class="status-dot"></span>Configurado</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Automacoes</span></div>
+      <div class="gap-12">
+        <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:500">Sync automatico</div><div style="font-size:11px;color:var(--text3)">A cada 6h: 00h, 06h, 12h, 18h</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:500">Alertas de CPL</div><div style="font-size:11px;color:var(--text3)">Notificar quando CPL sobe +30%</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:500">Alerta de budget 80%</div><div style="font-size:11px;color:var(--text3)">Avisar quando budget mensal em 80%</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<div class="modal-overlay" id="modal-new-client">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nova Conta de Cliente</span><button class="icon-btn" onclick="closeModal('modal-new-client')" style="font-size:18px">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nome do Cliente</label><input class="form-input" id="new-client-name" placeholder="Ex: MedTech Solucoes"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Segmento</label><select class="form-input form-select" id="new-client-segment"><option value="saude">Saude</option><option value="tech">Tecnologia</option><option value="industria">Industria</option><option value="consultoria">Consultoria</option></select></div>
+        <div class="form-group"><label class="form-label">Budget Mensal (R$)</label><input class="form-input" id="new-client-budget" type="number" placeholder="10000"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Meta Ad Account ID</label><input class="form-input" id="new-client-meta" placeholder="1234567890 (sem act_)" style="font-family:var(--mono)"></div>
+      <div class="form-group"><label class="form-label">Google Customer ID</label><input class="form-input" id="new-client-google" placeholder="123-456-7890" style="font-family:var(--mono)"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">CPL Benchmark (R$)</label><input class="form-input" id="new-client-cpl" type="number" placeholder="50"></div>
+        <div class="form-group"><label class="form-label">Cor (hex)</label><input class="form-input" id="new-client-color" placeholder="#1877F2" value="#1877F2"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-client')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveNewClient()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-area" id="toast-area"></div>
+
+<script>
+const API = '';
+let aiHistory = [];
+
+async function api(method, url, body=null) {
+  const opts = { method, headers: { 'Content-Type':'application/json', 'x-session-token':'dev-token' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + url, opts);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+}
+
+function navigate(view) {
+  document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('view-'+view);
+  if (el) el.classList.add('active');
+  const nav = document.getElementById('nav-'+view);
+  if (nav) nav.classList.add('active');
+  document.getElementById('main-content').scrollTop = 0;
+  if (view === 'dashboard') loadDashboard();
+  if (view === 'campaigns') loadCampaigns();
+  if (view === 'clients') loadClients();
+  if (view === 'alerts') loadAlerts();
+  if (view === 'settings') loadSetupStatus();
+  if (view === 'setup') { loadSetupStatus(); loadSetupAccounts(); }
+}
+
+async function loadDashboard() {
+  try {
+    const data = await api('GET', '/api/metrics/portfolio?period=30');
+    const t = data.totals;
+    document.getElementById('kpi-spend').textContent = 'R$ ' + parseFloat(t.total_spend||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('kpi-leads').textContent = parseInt(t.total_leads||0).toLocaleString('pt-BR');
+    document.getElementById('kpi-cpl').textContent = t.avg_cpl ? 'R$ ' + parseFloat(t.avg_cpl).toFixed(2) : 'R$ --';
+    document.getElementById('dash-sub').textContent = 'Ultimos 30 dias · ' + new Date().toLocaleDateString('pt-BR');
+    const accounts = await api('GET', '/api/accounts');
+    const tbody = document.getElementById('dash-accounts');
+    if (!accounts.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">Nenhuma conta cadastrada. Va em <strong style="color:var(--orange)">Contas & API</strong>.</td></tr>'; return; }
+    document.getElementById('kpi-campaigns').textContent = accounts.reduce((s,a)=>s+parseInt(a.active_campaigns||0),0);
+    tbody.innerHTML = accounts.map(a => `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:6px;background:${a.client_color||'var(--bg5)'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">${(a.client_name||'?').substring(0,2).toUpperCase()}</div><span style="font-weight:500">${a.client_name}</span></div></td>
+      <td><div style="display:flex;gap:4px">${a.meta_ad_account_id?'<span class="plat meta">META</span>':''}${a.google_customer_id?'<span class="plat google">GOOGLE</span>':''}</div></td>
+      <td class="td-num">${a.active_campaigns||0}</td>
+      <td class="td-num">R$ ${parseFloat(a.month_spend||0).toFixed(0)}</td>
+      <td class="td-num" style="color:${a.month_cpl>0?(a.month_cpl>(a.cpl_benchmark||9999)?'var(--red)':'var(--green)'):'var(--text3)'}">${a.month_cpl?'R$ '+parseFloat(a.month_cpl).toFixed(2):'--'}</td>
+      <td><div class="perf-bar" style="width:80px"><div class="perf-fill ${(a.budget_pct_used||0)>80?'red':''}" style="width:${Math.min(100,a.budget_pct_used||0)}%"></div></div></td>
+      <td><span class="status active"><span class="status-dot"></span>Ativo</span></td>
+      <td><button class="btn btn-ghost btn-sm" onclick="syncAccount('${a.id}','${a.client_name}')">⟳ Sync</button></td>
+    </tr>`).join('');
+    const metaSpend = parseFloat(t.meta_spend||0);
+    const googleSpend = parseFloat(t.google_spend||0);
+    const total = metaSpend + googleSpend;
+    if (total > 0) {
+      const metaPct = Math.round(metaSpend/total*100);
+      document.getElementById('channel-split').innerHTML = `<div style="display:flex;gap:16px;margin-bottom:12px"><div style="flex:1;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--meta)">${metaPct}%</div><div style="font-size:11px;color:var(--text3)">Meta Ads</div><div style="font-size:12px;font-family:var(--mono)">R$ ${metaSpend.toFixed(0)}</div></div><div style="width:1px;background:var(--border)"></div><div style="flex:1;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--google)">${100-metaPct}%</div><div style="font-size:11px;color:var(--text3)">Google Ads</div><div style="font-size:12px;font-family:var(--mono)">R$ ${googleSpend.toFixed(0)}</div></div></div><div style="height:8px;border-radius:4px;overflow:hidden;display:flex"><div style="width:${metaPct}%;background:var(--meta)"></div><div style="width:${100-metaPct}%;background:var(--google)"></div></div>`;
+    }
+  } catch(e) { console.log('Dashboard load:', e.message); }
+}
+
+async function loadCampaigns() {
+  try {
+    const camps = await api('GET', '/api/campaigns');
+    const list = document.getElementById('campaigns-list');
+    document.getElementById('camp-sub').textContent = camps.length + ' campanhas';
+    if (!camps.length) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Nenhuma campanha sincronizada. Configure contas em <strong style="color:var(--orange)">Contas & API</strong> e clique Sincronizar.</div>'; return; }
+    list.innerHTML = camps.map(c => `<div class="campaign-row" data-status="${c.status}">
+      <div class="campaign-header" onclick="toggleCampaign(this)">
+        <span class="campaign-expand">▶</span>
+        <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" ${c.status==='ACTIVE'?'checked':''} onchange="toggleCampStatus('${c.id}',this)"><span class="toggle-slider"></span></label>
+        <span class="plat ${c.platform}">${c.platform.toUpperCase()}</span>
+        <span class="campaign-name">${c.name||'Sem nome'}</span>
+        <div class="campaign-meta">
+          <span class="status ${c.status==='ACTIVE'?'active':'paused'}"><span class="status-dot"></span>${c.status==='ACTIVE'?'Ativa':'Pausada'}</span>
+          <span style="font-size:11px;color:var(--text3)">R$</span>
+          <input class="budget-input" value="${parseFloat(c.daily_budget||0).toFixed(0)}" onchange="updateBudget('${c.id}',this)" onclick="event.stopPropagation()">
+          <span style="font-size:11px;color:var(--text3)">/dia</span>
+          <span style="font-size:11px;color:var(--text3)">${c.client_name}</span>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();sendAiPrompt('Analise a campanha: ${c.name}');navigate('ai')">✦ IA</button>
+        </div>
+      </div>
+    </div>`).join('');
+  } catch(e) { document.getElementById('campaigns-list').innerHTML = '<div style="color:var(--red);padding:20px">Erro: '+e.message+'</div>'; }
+}
+
+async function loadClients() {
+  try {
+    const accounts = await api('GET', '/api/accounts');
+    document.getElementById('clients-sub').textContent = accounts.length + ' contas ativas';
+    const grid = document.getElementById('clients-grid');
+    const cards = accounts.map(a => `<div class="card" style="cursor:pointer" onclick="showToast('${a.client_name} selecionado','info')">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:8px;background:${a.client_color||'var(--bg5)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff">${(a.client_name||'?').substring(0,2).toUpperCase()}</div>
+          <div><div style="font-size:14px;font-weight:600">${a.client_name}</div><div style="font-size:11px;color:var(--text3)">${a.client_segment||'--'}</div></div>
+        </div><span class="status active"><span class="status-dot"></span>Ativo</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px">${a.meta_ad_account_id?'<span class="plat meta">META</span>':''}${a.google_customer_id?'<span class="plat google">GOOGLE</span>':''}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div style="background:var(--bg4);border-radius:var(--radius);padding:8px;text-align:center"><div style="font-size:16px;font-weight:700">${a.active_campaigns||0}</div><div style="font-size:10px;color:var(--text3)">Campanhas</div></div>
+        <div style="background:var(--bg4);border-radius:var(--radius);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:${a.month_cpl?(a.month_cpl>(a.cpl_benchmark||9999)?'var(--red)':'var(--green)'):'var(--text3)'}">${a.month_cpl?'R$'+parseFloat(a.month_cpl).toFixed(0):'--'}</div><div style="font-size:10px;color:var(--text3)">CPL</div></div>
+        <div style="background:var(--bg4);border-radius:var(--radius);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700">${a.monthly_budget_target?'R$'+parseFloat(a.monthly_budget_target).toFixed(0):'--'}</div><div style="font-size:10px;color:var(--text3)">Budget</div></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="event.stopPropagation();syncAccount('${a.id}','${a.client_name}')">⟳ Sync</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();sendAiPrompt('Analise o portfolio de ${a.client_name}');navigate('ai')">✦ IA</button>
+      </div>
+    </div>`).join('');
+    grid.innerHTML = cards + `<div class="card" style="border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:200px;cursor:pointer;color:var(--text3)" onclick="openModal('modal-new-client')"><span style="font-size:24px">+</span><span style="font-size:13px;font-weight:500">Adicionar cliente</span></div>`;
+  } catch(e) { console.log('Clients load:', e.message); }
+}
+
+async function loadAlerts() {
+  try {
+    const alerts = await api('GET', '/api/alerts?resolved=false');
+    document.getElementById('alerts-sub').textContent = alerts.length + ' alertas ativos';
+    document.getElementById('alerts-badge').textContent = alerts.length;
+    const list = document.getElementById('alerts-list');
+    if (!alerts.length) { list.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;text-align:center">Nenhum alerta ativo. Portfolio saudavel.</div>'; return; }
+    list.innerHTML = alerts.map(al => `<div class="card card-sm" style="border-left:3px solid ${al.severity==='critical'?'var(--red)':al.severity==='warning'?'var(--yellow)':'var(--meta)'}">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">${al.severity==='critical'?'⚠':'◉'}</span>
+          <div><div style="font-size:13px;font-weight:600">${al.client_name} ${al.campaign_name?'· '+al.campaign_name:''}</div><div style="font-size:12px;color:var(--text3);margin-top:2px">${al.message}</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text3)">${new Date(al.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>
+          <button class="btn btn-ghost btn-sm" onclick="resolveAlert('${al.id}',this)">✓ Resolver</button>
+        </div>
+      </div>
+    </div>`).join('');
+  } catch(e) {}
+}
+
+async function loadSetupStatus() {
+  try {
+    const s = await api('GET', '/api/setup/status');
+    const metaEl = document.getElementById('meta-conn-status');
+    const googleEl = document.getElementById('google-conn-status');
+    if (metaEl) { metaEl.className = 'status ' + (s.meta.connected?'active':'review'); metaEl.innerHTML = `<span class="status-dot"></span>${s.meta.connected?'Conectado':'Nao conectado'}`; }
+    if (googleEl) { googleEl.className = 'status ' + (s.google.connected?'active':'review'); googleEl.innerHTML = `<span class="status-dot"></span>${s.google.connected?'Conectado':'Nao conectado'}`; }
+    const sm = document.getElementById('settings-meta-status');
+    const sg = document.getElementById('settings-google-status');
+    if (sm) { sm.className='status '+(s.meta.connected?'active':'review'); sm.innerHTML=`<span class="status-dot"></span>${s.meta.connected?'Conectado':'Configurar'}`; }
+    if (sg) { sg.className='status '+(s.google.connected?'active':'review'); sg.innerHTML=`<span class="status-dot"></span>${s.google.connected?'Conectado':'Configurar'}`; }
+  } catch(e) {}
+}
+
+async function loadSetupAccounts() {
+  try {
+    const accounts = await api('GET', '/api/accounts');
+    const tbody = document.getElementById('setup-accounts-table');
+    if (!accounts.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px">Nenhuma conta. Clique em + Adicionar.</td></tr>'; return; }
+    tbody.innerHTML = accounts.map(a => `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:6px;background:${a.client_color||'var(--bg5)'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">${(a.client_name||'').substring(0,2).toUpperCase()}</div>${a.client_name}</div></td>
+      <td><span class="tag">${a.client_segment||'--'}</span></td>
+      <td><code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px">${a.meta_ad_account_id?'act_'+a.meta_ad_account_id:'—'}</code></td>
+      <td><code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px">${a.google_customer_id||'—'}</code></td>
+      <td class="td-num">${a.monthly_budget_target?'R$ '+parseFloat(a.monthly_budget_target).toLocaleString('pt-BR'):'—'}</td>
+      <td><span class="status active"><span class="status-dot"></span>Ativo</span></td>
+      <td><button class="btn btn-ghost btn-sm" onclick="syncAccount('${a.id}','${a.client_name}')">⟳ Sync</button></td>
+    </tr>`).join('');
+  } catch(e) {}
+}
+
+async function connectMeta() {
+  const token = document.getElementById('meta-token-input').value.trim();
+  const bm = document.getElementById('meta-bm-input').value.trim();
+  if (!token) { showToast('Cole o System User Token','error'); return; }
+  if (!bm) { showToast('Informe o Business Manager ID','error'); return; }
+  showToast('Validando token Meta...','info');
+  try {
+    const r = await api('POST', '/api/setup/meta', { system_user_token: token, business_manager_id: bm });
+    showToast('Meta conectado! Usuario: ' + (r.user?.name||'ok'),'success');
+    loadSetupStatus();
+    try {
+      const accounts = await api('GET', '/api/setup/meta/accounts');
+      const all = [...(accounts.owned||[]),...(accounts.clients||[])];
+      if (all.length) {
+        document.getElementById('meta-accounts-found').style.display = 'block';
+        document.getElementById('meta-accounts-items').innerHTML = all.map(a => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg4);border-radius:var(--radius);font-size:12px"><div><span class="plat meta">META</span><span style="margin-left:8px;font-weight:500">${a.name||a.id}</span></div><code style="font-size:10px;color:var(--text3)">${a.id}</code></div>`).join('');
+        showToast(all.length + ' contas encontradas no Business Manager','success');
+      }
+    } catch(e) {}
+  } catch(e) { showToast('Erro: '+e.message,'error'); }
+}
+
+async function connectGoogle() {
+  try {
+    const data = await api('GET', '/api/setup/google/auth-url');
+    window.location.href = data.url;
+  } catch(e) { showToast('Configure GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env do servidor','error'); }
+}
+
+async function saveNewClient() {
+  const body = {
+    client_name: document.getElementById('new-client-name').value.trim(),
+    client_segment: document.getElementById('new-client-segment').value,
+    monthly_budget_target: parseFloat(document.getElementById('new-client-budget').value)||null,
+    meta_ad_account_id: document.getElementById('new-client-meta').value.trim()||null,
+    google_customer_id: document.getElementById('new-client-google').value.trim()||null,
+    cpl_benchmark: parseFloat(document.getElementById('new-client-cpl').value)||null,
+    client_color: document.getElementById('new-client-color').value||'#1877F2',
+  };
+  if (!body.client_name) { showToast('Nome obrigatorio','error'); return; }
+  try {
+    await api('POST', '/api/accounts', body);
+    showToast('Cliente '+body.client_name+' adicionado!','success');
+    closeModal('modal-new-client');
+    loadSetupAccounts();
+    loadClients();
+  } catch(e) { showToast('Erro: '+e.message,'error'); }
+}
+
+async function syncAccount(id, name) {
+  showToast('Sincronizando '+name+'...','info');
+  try {
+    const r = await api('POST', '/api/sync/account/'+id);
+    showToast(name+' sincronizado em '+r.duration_ms+'ms','success');
+    loadDashboard();
+  } catch(e) { showToast('Erro sync '+name+': '+e.message,'error'); }
+}
+
+async function syncAll() {
+  const label = document.getElementById('sync-label');
+  const dot = document.getElementById('sync-dot');
+  label.textContent = 'Sincronizando...';
+  dot.style.background = 'var(--yellow)';
+  try {
+    await api('POST', '/api/sync/all');
+    label.textContent = 'Sincronizado agora';
+    dot.style.background = 'var(--green)';
+    showToast('Todas as contas sincronizadas','success');
+    loadDashboard();
+  } catch(e) {
+    label.textContent = 'Erro no sync';
+    dot.style.background = 'var(--red)';
+    showToast('Erro: '+e.message,'error');
+  }
+}
+
+async function resolveAlert(id, btn) {
+  try {
+    await api('PUT', '/api/alerts/'+id+'/resolve');
+    btn.closest('.card').style.opacity = '0.4';
+    btn.closest('.card').style.pointerEvents = 'none';
+    showToast('Alerta resolvido','success');
+  } catch(e) {}
+}
+
+function resolveAllAlerts() { showToast('Resolvendo todos os alertas...','info'); setTimeout(() => { loadAlerts(); showToast('Todos resolvidos','success'); }, 1000); }
+
+async function toggleCampStatus(id, checkbox) {
+  const status = checkbox.checked ? 'ACTIVE' : 'PAUSED';
+  try {
+    await api('PUT', '/api/campaigns/'+id+'/status', { status });
+    showToast('Campanha ' + (status==='ACTIVE'?'ativada':'pausada'),'success');
+  } catch(e) { showToast('Erro: '+e.message,'error'); checkbox.checked = !checkbox.checked; }
+}
+
+async function updateBudget(id, input) {
+  try {
+    await api('PUT', '/api/campaigns/'+id+'/budget', { daily_budget: parseFloat(input.value) });
+    showToast('Budget atualizado para R$ '+input.value+'/dia','success');
+  } catch(e) { showToast('Erro: '+e.message,'error'); }
+}
+
+function toggleCampaign(header) {
+  const body = header.nextElementSibling;
+  if (!body || !body.classList.contains('campaign-body')) return;
+  body.classList.toggle('open');
+  header.querySelector('.campaign-expand')?.classList.toggle('open');
+}
+
+function filterCamps(filter, el) {
+  document.querySelectorAll('#view-campaigns .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.campaign-row').forEach(r => {
+    r.style.display = (filter==='all' || r.dataset.status===filter) ? 'block' : 'none';
+  });
+}
+
+function setPlat(p, el) {
+  document.querySelectorAll('.topbar .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+async function sendAiMsg() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const msgs = document.getElementById('ai-messages');
+  msgs.innerHTML += `<div class="ai-msg user"><div class="ai-avatar" style="background:var(--bg5)">T</div><div class="ai-bubble">${text}</div></div>`;
+  input.value = '';
+  const typing = document.createElement('div');
+  typing.className = 'ai-msg';
+  typing.innerHTML = '<div class="ai-avatar vora">V</div><div class="ai-bubble" style="color:var(--text3)">Analisando...</div>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  try {
+    aiHistory.push({ role:'user', content:text });
+    const data = await api('POST', '/api/ai/chat', { message:text, history:aiHistory.slice(-6) });
+    typing.querySelector('.ai-bubble').innerHTML = '<strong style="font-size:12px;color:var(--orange)">VORA Traffic</strong><br>' + (data.reply||'Erro').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    aiHistory.push({ role:'assistant', content:data.reply });
+    if (aiHistory.length > 20) aiHistory = aiHistory.slice(-20);
+  } catch(e) {
+    typing.querySelector('.ai-bubble').innerHTML = '<span style="color:var(--red)">Erro: '+e.message+'</span>';
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendAiPrompt(text) { document.getElementById('ai-input').value = text; sendAiMsg(); }
+function clearAiChat() { aiHistory=[]; document.getElementById('ai-messages').innerHTML='<div class="ai-msg"><div class="ai-avatar vora">V</div><div class="ai-bubble"><strong style="font-size:12px;color:var(--orange)">VORA Traffic</strong><br>Sessao reiniciada. Como posso analisar seu portfolio?</div></div>'; }
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg, type='info') {
+  const area = document.getElementById('toast-area');
+  const icons = { success:'✓', error:'⚠', info:'◎' };
+  const colors = { success:'var(--green)', error:'var(--red)', info:'var(--text2)' };
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span style="color:${colors[type]}">${icons[type]}</span><span style="flex:1">${msg}</span>`;
+  area.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3500);
+}
+
+function toggleTheme(){const b=document.body;b.classList.toggle("light");const l=b.classList.contains("light");localStorage.setItem("ads-theme",l?"light":"dark");const btn=document.getElementById("theme-btn");if(btn)btn.textContent=l?"263D":"2600";}if(localStorage.getItem("ads-theme")==="light"){document.body.classList.add("light");const tb=document.getElementById("theme-btn");if(tb)tb.textContent="263D";}document.addEventListener("click", e => { if (!e.target.closest('.dropdown')) document.querySelectorAll('.dropdown-menu').forEach(m=>m.style.display='none'); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); });
+
+const params = new URLSearchParams(window.location.search);
+if (params.get('setup_success')==='google') { showToast('Google Ads conectado com sucesso!','success'); loadSetupStatus(); }
+if (params.get('setup_error')) showToast('Erro OAuth: '+params.get('setup_error'),'error');
+
+loadDashboard();
+</script>
+</body>
+</html>

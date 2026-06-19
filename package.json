@@ -1,0 +1,19 @@
+{
+  "name": "vohaus-ads-hub",
+  "version": "1.0.0",
+  "description": "Vohaus Ads Hub — ads.vohaus.com.br",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^2.7.0",
+    "pg": "^8.12.0",
+    "uuid": "^9.0.1"
+  }
+}
